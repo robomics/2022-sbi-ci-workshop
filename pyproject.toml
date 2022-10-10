@@ -47,5 +47,6 @@ cryptonite = "cryptonite.__main__:main"
 [tool.setuptools_scm]
 write_to = "cryptonite/_version.py"
 
-[tool.setuptools]
-packages = ["cryptonite"]
+[tool.setuptools.packages.find]
+include = ["cryptonite*"]
+exclude = ["cryptonite.tests*"]
