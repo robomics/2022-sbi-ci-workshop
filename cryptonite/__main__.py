@@ -61,7 +61,7 @@ def parse_and_validate_args(cli) -> Union[dict, None]:
 
 def __read_next_chunk(chunk_size: int = 64 * 1024 * 1024 / 8) -> str:
     assert int(chunk_size) > 0
-    return sys.stdin.read(chunk_size)
+    return sys.stdin.read(int(chunk_size))
 
 
 def __read_next_chunk_np(chunk_size: int = 64 * 1024 * 1024 / 8) -> np.ndarray:
