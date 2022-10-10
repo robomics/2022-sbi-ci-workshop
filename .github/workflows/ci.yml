@@ -7,8 +7,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - ".github/workflows/build-package.yml"
-      - ".github/workflows/test-package.yml"
+      - ".github/workflows/ci.yml"
       - "cryptonite/**"
       - "pyproject.toml"
       - "setup.py"
@@ -18,11 +17,13 @@ on:
 
   pull_request:
     paths:
-      - ".github/workflows/build-package.yml"
-      - ".github/workflows/test-package.yml"
+      - ".github/workflows/ci.yml"
       - "cryptonite/**"
       - "pyproject.toml"
       - "setup.py"
+
+  release:
+    types: [ published ]
 
 jobs:
   build-package:
@@ -154,7 +155,7 @@ jobs:
   publish-package:
     needs: [unit-test, integration-test]
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'release'
 
     steps:
       - name: Download package artifact
@@ -184,7 +185,7 @@ jobs:
   download-package:
     needs: publish-package
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'release'
 
     steps:
       - name: Download Cryptonite from PyPI
