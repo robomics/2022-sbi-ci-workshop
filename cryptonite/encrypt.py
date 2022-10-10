@@ -2,13 +2,19 @@
 #
 # SPDX-License-Identifier: MIT
 from cryptonite.utils import is_ascii
+from typing import Union
+import numpy as np
 
 
 def __encrypt_char(c: str, offset: int, num_ascii_chars: int = 127):
     return chr(abs((ord(c) + offset) % num_ascii_chars))
 
 
-def encrypt(text, offset: int, validate: bool = True) -> str:
+def __encrypt_np_array(text: np.ndarray, offset: int, num_ascii_chars: int = 127):
+    return (text + offset) % num_ascii_chars
+
+
+def encrypt(text: Union[str, np.ndarray], offset: int, validate: bool = True) -> str:
     """
     Encrypt ASCII text by shifting each characted by the offset param.
     :param text: a string-like object with the message to be encrypted. Should not contain non-ASCII characters.
@@ -16,6 +22,9 @@ def encrypt(text, offset: int, validate: bool = True) -> str:
     :param validate: validate input string.
     :return: encrypted text
     """
+    if isinstance(text, np.ndarray):
+        validate = False
+
     num_ascii_chars = 127
 
     if validate:
@@ -30,4 +39,7 @@ def encrypt(text, offset: int, validate: bool = True) -> str:
                                " Encrypted text would be identical to plain text!")
 
     offset %= num_ascii_chars
+    if isinstance(text, np.ndarray):
+        return __encrypt_np_array(text, offset).tobytes().decode("ascii")
+
     return "".join(map(str, [__encrypt_char(c, offset) for c in text]))
