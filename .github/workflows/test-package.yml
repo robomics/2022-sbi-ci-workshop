@@ -65,13 +65,6 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-          cache-dependency-path: "pyproject.toml"
-          cache: "pip"
-
       - name: Download package artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -82,14 +75,20 @@ jobs:
       - name: Extract Package
         run: tar -xf cryptonite-pkg.tar.xz
 
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache-dependency-path: "pkg/pyproject.toml"
+          cache: "pip"
+
       - name: Create Python virtualenv
         run: python3 -m venv ./venv --upgrade
 
       - name: Install Cryptonite
         run: |
-          venv/bin/python3 -m pip install \
-            '.[test]' \
-            pkg/cryptonite*.whl
+          venv/bin/python3 -m pip install pkg/cryptonite*.whl
+          venv/bin/python3 -m pip install '.[test]'
 
-      - name: Run unit test
+      - name: Run unit tests
         run: venv/bin/python3 -m pytest
