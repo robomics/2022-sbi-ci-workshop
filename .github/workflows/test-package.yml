@@ -1,0 +1,78 @@
+# Copyright (C) 2022 Roberto Rossini (roberros@uio.no)
+# SPDX-License-Identifier: MIT
+
+name: Test Package
+
+on:
+  workflow_run:
+    workflows: ["Build Package"]
+    branches: [ main, ci-devel ]
+    types: [ completed ]
+
+env:
+  TEST_DATASET_URL: 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.refGene.gtf.gz'
+  CRYPTONITE_KEY: 18
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Check Python and PIP version
+        run: |
+          python3 --version
+          python3 -m pip --version
+
+      - name: Download package artifact
+        uses: actions/download-artifact@v3
+        with: cryptonite-pkg
+
+      - name: Extract Package
+        run: tar -xf cryptonite-pkg.tar.xz
+
+      - name: Download test dataset
+        run: curl -L "$TEST_DATASET_URL" | gzip -dc > test_dataset.txt
+
+      - name: Create Python virtualenv
+        run: python3 -m venv ./venv --upgrade
+
+      - name: Install Cryptonite
+        run: venv/bin/python3 -m pip install pkg/cryptonite*.whl
+
+      - name: Run integration test
+        run: |
+          venv/bin/cryptonite encrypt --no-validate < test_dataset.txt > test_dataset.encrypted
+          venv/bin/cryptonite decrypt --no-validate < test_dataset.encrypted > test_dataset.plain
+          
+          diff test_dataset.plain test_dataset.txt
+
+  unit-test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Check Python and PIP version
+        run: |
+          python3 --version
+          python3 -m pip --version
+
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Download package artifact
+        uses: actions/download-artifact@v3
+        with: cryptonite-pkg
+
+      - name: Extract Package
+        run: tar -xf cryptonite-pkg.tar.xz
+
+      - name: Create Python virtualenv
+        run: python3 -m venv ./venv --upgrade
+
+      - name: Install Cryptonite
+        run: |
+          venv/bin/python3 -m pip install \
+            '.[test]' \
+            pkg/cryptonite*.whl
+
+      - name: Run unit test
+        run: venv/bin/python3 -m pytest
