@@ -8,6 +8,7 @@ on:
     branches: [ main, ci-devel ]
     paths:
       - ".github/workflows/build-package.yml"
+      - ".github/workflows/test-package.yml"
       - "cryptonite/**"
       - "pyproject.toml"
       - "setup.cfg"
@@ -19,6 +20,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/build-package.yml"
+      - ".github/workflows/test-package.yml"
       - "cryptonite/**"
       - "pyproject.toml"
       - "setup.cfg"
