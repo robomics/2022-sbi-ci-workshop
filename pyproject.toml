@@ -1,0 +1,7 @@
+# Copyright (C) 2022 Roberto Rossini <roberros@uio.no>
+# SPDX-License-Identifier: MIT
+
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "cryptonite/version.py"
