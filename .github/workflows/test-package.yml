@@ -14,7 +14,13 @@ env:
 
 jobs:
   integration-test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "macos-latest"]
+        python-version: ["3.8", "3.9", "3.10"]
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Download package artifact
@@ -30,7 +36,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: ${{ matrix.python-version }}
           cache-dependency-path: "pkg/pyproject.toml"
           cache: "pip"
 
@@ -59,7 +65,13 @@ jobs:
           diff test_dataset.plain test_dataset.txt
 
   unit-test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "macos-latest"]
+        python-version: ["3.8", "3.9", "3.10"]
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Clone repository
@@ -78,7 +90,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: ${{ matrix.python-version }}
           cache-dependency-path: "pkg/pyproject.toml"
           cache: "pip"
 
