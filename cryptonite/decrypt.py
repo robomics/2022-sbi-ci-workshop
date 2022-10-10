@@ -4,9 +4,11 @@
 
 from cryptonite.encrypt import encrypt
 from cryptonite.utils import is_ascii
+from typing import Union
+import numpy as np
 
 
-def decrypt(text, offset: int, validate: bool = True) -> str:
+def decrypt(text: Union[str, np.ndarray], offset: int, validate: bool = True) -> str:
     """
     Decrypt ASCII text by shifting each characted by the offset param.
     :param text: a string-like object containing encrypted text.
@@ -14,6 +16,9 @@ def decrypt(text, offset: int, validate: bool = True) -> str:
     :param validate: validate input string.
     :return: plain text.
     """
+    if isinstance(text, np.ndarray):
+        validate = False
+
     if validate:
         if not is_ascii(text):
             raise RuntimeError("text does not use ASCII encoding.")
