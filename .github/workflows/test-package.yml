@@ -6,7 +6,6 @@ name: Test Package
 on:
   workflow_run:
     workflows: ["Build Package"]
-    branches: [ main, ci-devel ]
     types: [ completed ]
 
 env:
