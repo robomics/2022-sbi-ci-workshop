@@ -6,19 +6,21 @@ from cryptonite.encrypt import encrypt
 from cryptonite.utils import is_ascii
 
 
-def decrypt(text, offset: int) -> str:
+def decrypt(text, offset: int, validate: bool = True) -> str:
     """
     Decrypt ASCII text by shifting each characted by the offset param.
     :param text: a string-like object containing encrypted text.
     :param offset: a non-zero integer. Multiples of 127 will raise an error.
+    :param validate: validate input string.
     :return: plain text.
     """
-    if not is_ascii(text):
-        raise RuntimeError("text does not use ASCII encoding.")
+    if validate:
+        if not is_ascii(text):
+            raise RuntimeError("text does not use ASCII encoding.")
 
     num_ascii_chars = 127
     offset = offset % num_ascii_chars
     if offset == 0:
         return text
 
-    return encrypt(text, -offset)
+    return encrypt(text, -offset, validate)

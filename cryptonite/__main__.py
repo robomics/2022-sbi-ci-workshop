@@ -29,7 +29,11 @@ def make_cli() -> argparse.ArgumentParser:
     decrypt_cmd = subparsers.add_parser("decrypt",
                                         help="Decrypt message received from stdin and output to stdout.")
 
-    [c.add_argument("--version", action="version", version=f"%(prog)s v{get_version()}") for c in [cli, decrypt_cmd, encrypt_cmd]]
+    [cmd.add_argument("--version", action="version", version=f"%(prog)s v{get_version()}") for cmd in [cli, decrypt_cmd, encrypt_cmd]]
+
+    [cmd.add_argument("--validate-input", action="store_true") for cmd in [decrypt_cmd, encrypt_cmd]]
+    [cmd.add_argument("--no-validate-input", dest="validate_input", action="store_false") for cmd in [decrypt_cmd, encrypt_cmd]]
+    [cmd.set_defaults(validate_input=True) for cmd in [decrypt_cmd, encrypt_cmd]]
 
     key_required = read_key_from_env() is None
     encrypt_cmd.add_argument("-k", "--key", type=int, help="Encryption key.", required=key_required)
@@ -38,7 +42,7 @@ def make_cli() -> argparse.ArgumentParser:
     return cli
 
 
-def parse_and_validate_args(cli) -> dict:
+def parse_and_validate_args(cli) -> Union[dict, None]:
     args = vars(cli.parse_args())
     if args["command"] is None:
         cli.print_help()
@@ -72,14 +76,15 @@ def main() -> int:
     key = args["key"]
     assert key
 
+    validate_input = args["validate_input"]
     if args["command"] == "encrypt":
         def fx(text):
-            return encrypt.encrypt(text, key)
+            return encrypt.encrypt(text, key, validate_input)
     else:
         assert args["command"] == "decrypt"
 
         def fx(text):
-            return decrypt.decrypt(text, key)
+            return decrypt.decrypt(text, key, validate_input)
 
     try:
         buff = read_next_chunk()
