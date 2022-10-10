@@ -11,7 +11,7 @@ import os
 import sys
 from typing import Union
 
-from setuptools_scm import get_version
+from importlib.metadata import version
 
 from . import decrypt, encrypt
 import numpy as np
@@ -30,7 +30,8 @@ def make_cli() -> argparse.ArgumentParser:
     decrypt_cmd = subparsers.add_parser("decrypt",
                                         help="Decrypt message received from stdin and output to stdout.")
 
-    [cmd.add_argument("--version", action="version", version=f"%(prog)s v{get_version()}") for cmd in [cli, decrypt_cmd, encrypt_cmd]]
+    ver = version("cryptonite")
+    [cmd.add_argument("--version", action="version", version=f"%(prog)s v{ver}") for cmd in [cli, decrypt_cmd, encrypt_cmd]]
 
     [cmd.add_argument("--validate-input", action="store_true") for cmd in [decrypt_cmd, encrypt_cmd]]
     [cmd.add_argument("--no-validate-input", dest="validate_input", action="store_false") for cmd in [decrypt_cmd, encrypt_cmd]]
