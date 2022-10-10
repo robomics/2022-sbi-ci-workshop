@@ -5,7 +5,7 @@ name: Build Package
 
 on:
   push:
-    branches: [ main, ci-devel ]
+    branches: [ main ]
     paths:
       - ".github/workflows/build-package.yml"
       - ".github/workflows/test-package.yml"
