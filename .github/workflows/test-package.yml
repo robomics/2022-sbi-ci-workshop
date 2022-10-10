@@ -60,7 +60,8 @@ jobs:
 
       - name: Download package artifact
         uses: actions/download-artifact@v3
-        with: cryptonite-pkg
+        with:
+          name: cryptonite-pkg
 
       - name: Extract Package
         run: tar -xf cryptonite-pkg.tar.xz
