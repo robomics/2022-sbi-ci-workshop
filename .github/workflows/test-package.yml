@@ -17,11 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Check Python and PIP version
-        run: |
-          python3 --version
-          python3 -m pip --version
-
       - name: Download package artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -32,7 +27,22 @@ jobs:
       - name: Extract Package
         run: tar -xf cryptonite-pkg.tar.xz
 
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache-dependency-path: "pkg/pyproject.toml"
+          cache: "pip"
+
+      - name: Cache test dataset
+        id: cache-test-dataset
+        uses: actions/cache@v3
+        with:
+          key: "test-dataset-$TEST_DATASET_URL"
+          path: ${{ github.workspace }}/test_dataset.txt
+
       - name: Download test dataset
+        if: steps.cache-test-dataset.outputs.cache-hit != 'true'
         run: curl -L "$TEST_DATASET_URL" | gzip -dc > test_dataset.txt
 
       - name: Create Python virtualenv
