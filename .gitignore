@@ -6,7 +6,6 @@
 .pytest_cache/
 .vscode/
 venv/
-cryptonite/version.py
 
 
 # Byte-compiled / optimized / DLL files
