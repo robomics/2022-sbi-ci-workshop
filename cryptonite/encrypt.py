@@ -35,8 +35,10 @@ def encrypt(text: Union[str, np.ndarray], offset: int, validate: bool = True) ->
             raise RuntimeError("invalid offset: offset must be a non-zero integral number")
 
         if offset % num_ascii_chars == 0:
-            raise RuntimeError(f"invalid offset: offset is a multiple of {num_ascii_chars}."
-                               " Encrypted text would be identical to plain text!")
+            raise RuntimeError(
+                f"invalid offset: offset is a multiple of {num_ascii_chars}."
+                " Encrypted text would be identical to plain text!"
+            )
 
     offset %= num_ascii_chars
     if isinstance(text, np.ndarray):
