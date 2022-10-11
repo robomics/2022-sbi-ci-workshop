@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main, gha-syntax ]
     paths:
-      - ".github/workflows/006*.yml"
+      - ".github/workflows/005*.yml"
 
   pull_request:
     paths:
-      - ".github/workflows/006*.yml"
+      - ".github/workflows/005*.yml"
 
 jobs:
   job-matrix-example:
