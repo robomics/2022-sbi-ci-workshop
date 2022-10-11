@@ -1,0 +1,39 @@
+name: 005 - Intro to GHA Syntax
+
+on:
+  push:
+    branches: [ main, gha-syntax ]
+    paths:
+      - ".github/workflows/006*.yml"
+
+  pull_request:
+    paths:
+      - ".github/workflows/006*.yml"
+
+jobs:
+  job-matrix-example:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-ver: ['3.7', '3.11']
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check Python version
+        run: |
+          echo "uname: $(uname)"
+          echo '${{ matrix.os }}'
+          
+          which python3
+          python3 --version
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-ver }}
+
+      - name: Check Python version
+        run: |
+          which python3
+          python3 --version
+      
