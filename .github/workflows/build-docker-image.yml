@@ -63,3 +63,32 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: BUILDKIT_CONTEXT_KEEP_GIT_DIR=true
+
+  test-docker-image:
+    needs: build-dockerfile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull image
+        run: sudo docker pull ghcr.io/${{ github.repository }}/cryptonite:latest
+
+      - name: Check version
+        run: sudo docker run ghcr.io/${{ github.repository }}/cryptonite:latest --version
+
+      - name: Quick test
+        run: |
+          echo "Super-secret message" > message.txt
+          
+          sudo docker run -v ${{ github.workspace }}:/data                   \
+                          ghcr.io/${{ github.repository }}/cryptonite:latest \
+                          encrypt --key 17 < /data/message.txt > /data/message.encrypted
+          
+          
+          sudo docker run -v ${{ github.workspace }}:/data                   \
+                          ghcr.io/${{ github.repository }}/cryptonite:latest \
+                          decrypt --key 17 < /data/message.encrypted > /data/message.decrypted
+          
+          if diff -s -q message.txt message.decrypted; then
+            2>& echo 'PASS!'
+          else
+            2>& echo 'FAIL!'
+          fi

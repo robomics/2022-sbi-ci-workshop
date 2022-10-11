@@ -39,7 +39,7 @@ RUN rm -f /tmp/*.whl
 RUN cryptonite --help
 RUN cryptonite --version
 
-CMD [ "cryptonite" ]
+ENTRYPOINT [ "cryptonite" ]
 
 # https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys
 LABEL org.opencontainers.image.authors='Roberto Rossini <roberros@uio.no>'
