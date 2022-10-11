@@ -36,5 +36,15 @@ jobs:
           curl -LO "$HG38_MD5_URL"
           md5sum --check --ignore-missing md5sum.txt
 
+      - name: Checksum hg38 genome assembly
+        if: ${{ !steps.cache-hg38.outputs.cache-hit }}
+        run: |
+          curl -LO "$HG38_MD5_URL"
+          md5sum --check --ignore-missing md5sum.txt
+
+      - name: Extract hg38 genome assembly
+        if: ${{ !steps.cache-hg38.outputs.cache-hit }}
+        run: gzip -d *.fa.gz
+
       - name: Peek hg38
-        run: zcat *.fa.gz | head
+        run: head hg38*
