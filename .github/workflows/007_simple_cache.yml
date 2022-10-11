@@ -24,7 +24,7 @@ jobs:
         uses: actions/cache@v3
         with:
           key: ${{ env.HG38_URL }}
-          path: hg38.fa.masked.gz
+          path: hg38*
 
       - name: Download hg38 genome assembly
         if: ${{ !steps.cache-hg38.outputs.cache-hit }}
