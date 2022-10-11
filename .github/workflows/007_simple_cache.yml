@@ -38,7 +38,7 @@ jobs:
 
       - name: Extract hg38 genome assembly
         if: ${{ !steps.cache-hg38.outputs.cache-hit }}
-        run: gzip -d *.fa.gz
+        run: gzip -d *.gz
 
       - name: Peek hg38
         run: head hg38*
