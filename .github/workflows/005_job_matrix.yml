@@ -1,0 +1,31 @@
+name: 005 - Intro to GHA Syntax
+
+on:
+  push:
+    branches: [ main, gha-syntax ]
+    paths:
+      - ".github/workflows/005*.yml"
+
+  pull_request:
+    paths:
+      - ".github/workflows/005*.yml"
+
+jobs:
+  job-matrix-example:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Where am I running? (Unix)
+        if: ! contains(matrix.os, 'windows')
+        run: uname
+
+      - name: Where am I running? (Win)
+        if: contains(matrix.os, 'windows')
+        shell: cmd
+        run: ver
