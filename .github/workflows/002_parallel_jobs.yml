@@ -18,6 +18,8 @@ jobs:
         run: |
           echo 'Current time in job \#1 is:'
           date
+      - name: Sleep for a bit
+        run: sleep 10
 
   second-job:
     runs-on: ubuntu-latest
@@ -26,3 +28,5 @@ jobs:
         run: |
           echo 'Current time in job \#2 is:'
           date
+      - name: Sleep for a bit
+        run: sleep 10
