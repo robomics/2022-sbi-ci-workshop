@@ -49,3 +49,7 @@ write_to = "cryptonite/_version.py"
 [tool.setuptools.packages.find]
 include = ["cryptonite*"]
 exclude = ["cryptonite.tests*"]
+
+[tool.black]
+line-length = 120
+target-version = ["py37"]

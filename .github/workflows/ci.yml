@@ -39,6 +39,11 @@ jobs:
           cache-dependency-path: "pyproject.toml"
           cache: "pip"
 
+      - name: Wait Lint workflow to succeed
+        uses: lewagon/wait-on-check-action@v1
+        with:
+          check-name: "Lint project"
+
       - name: Install build dependencies
         run: python3 -m pip install --upgrade pip build
 
