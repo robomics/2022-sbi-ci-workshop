@@ -1,4 +1,4 @@
-name: 002 - Intro to GHA Syntax
+name: 003 - Intro to GHA Syntax
 
 on:
   push:
