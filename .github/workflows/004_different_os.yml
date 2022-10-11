@@ -22,3 +22,9 @@ jobs:
     steps:
       - name: Where am I running?
         run: uname
+
+  windows-job:
+    runs-on: windows-latest
+    steps:
+      - name: Where am I running?
+        run: ver
