@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main, gha-syntax ]
     paths:
-      - ".github/workflows/*.yml"
+      - ".github/workflows/001*.yml"
 
   pull_request:
     paths:
-      - ".github/workflows/*.yml"
+      - ".github/workflows/001*.yml"
 
 jobs:
   my-first-gha-job:
