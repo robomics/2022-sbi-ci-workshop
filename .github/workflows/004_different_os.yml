@@ -1,0 +1,30 @@
+name: 004 - Intro to GHA Syntax
+
+on:
+  push:
+    branches: [ main, gha-syntax ]
+    paths:
+      - ".github/workflows/004*.yml"
+
+  pull_request:
+    paths:
+      - ".github/workflows/004*.yml"
+
+jobs:
+  ubuntu-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Where am I running?
+        run: |
+          pwd
+          whoami
+          uname -a
+
+  macos-job:
+    runs-on: macos-latest
+    steps:
+      - name: Where am I running?
+        run: |
+          pwd
+          whoami
+          uname -a
