@@ -4,4 +4,4 @@
 
 from importlib.metadata import version
 
-__version__ = version("cryptonite")
+__version__ = version("2022-sbi-ci-workflow-cryptonite")

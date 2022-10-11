@@ -30,7 +30,7 @@ def make_cli() -> argparse.ArgumentParser:
     decrypt_cmd = subparsers.add_parser("decrypt",
                                         help="Decrypt message received from stdin and output to stdout.")
 
-    ver = version("cryptonite")
+    ver = version("2022-sbi-ci-workflow-cryptonite")
     [cmd.add_argument("--version", action="version", version=f"%(prog)s v{ver}") for cmd in [cli, decrypt_cmd, encrypt_cmd]]
 
     [cmd.add_argument("--validate-input", action="store_true") for cmd in [decrypt_cmd, encrypt_cmd]]

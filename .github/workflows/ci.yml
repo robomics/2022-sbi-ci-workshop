@@ -191,7 +191,7 @@ jobs:
       - name: Download Cryptonite from PyPI
         run: |
           python3 -m pip install \
-            --index-url https://test.pypi.org/simple/ \
+            --extra-index-url https://test.pypi.org/simple/ \
             2022-sbi-ci-workflow-cryptonite
 
       - name: Check Cryptonite version
