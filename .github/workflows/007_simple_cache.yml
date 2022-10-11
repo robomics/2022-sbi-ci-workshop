@@ -1,0 +1,28 @@
+name: 007 - Intro to GHA Syntax
+
+on:
+  push:
+    branches: [ main, gha-syntax ]
+    paths:
+      - ".github/workflows/007*.yml"
+
+  pull_request:
+    paths:
+      - ".github/workflows/007*.yml"
+
+jobs:
+  job-cache:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download hg38 genome assembly
+        run: |
+          curl -LO 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.masked.gz'
+
+      - name: Checksum hg38 genome assembly
+        run: |
+          curl -LO 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/md5sum.txt'
+          md5sum --check --ignore-missing md5sum.txt
+
+      - name: Peek hg38
+        run: zcat hg38.fa.masked.gz | head
