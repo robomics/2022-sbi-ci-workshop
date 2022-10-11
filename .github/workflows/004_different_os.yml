@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Where am I running?
-        run: uname -o
+        run: uname
 
   macos-job:
     runs-on: macos-latest
     steps:
       - name: Where am I running?
-        run: uname -o
+        run: uname
