@@ -24,7 +24,7 @@ jobs:
         uses: actions/cache@v3
         with:
           key: ${{ matrix.os }}-${{ matrix.build_type }}
-          path: *.txt
+          path: "*.txt"
 
       - name: Write message
         if: ${{ !steps.cache.outputs.cache-hit }}
