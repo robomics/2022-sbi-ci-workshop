@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Where am I running? (Unix)
-        if: ! contains(matrix.os, 'windows')
+        if: startsWith(matrix.os, 'windows') == 'false'
         run: uname
 
       - name: Where am I running? (Win)
