@@ -27,4 +27,5 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Where am I running?
+        shell: cmd
         run: ver
