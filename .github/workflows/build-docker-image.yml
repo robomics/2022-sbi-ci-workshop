@@ -74,21 +74,18 @@ jobs:
       - name: Check version
         run: sudo docker run ghcr.io/${{ github.repository }}/cryptonite:latest --version
 
-      - name: Quick test
+      - name: Test image
         run: |
           echo "Super-secret message" > message.txt
           
-          sudo docker run -v ${{ github.workspace }}:/data                   \
-                          ghcr.io/${{ github.repository }}/cryptonite:latest \
-                          encrypt --key 17 < /data/message.txt > /data/message.encrypted
+          sudo docker run -i ghcr.io/${{ github.repository }}/cryptonite:latest \
+                             encrypt --key 17 < message.txt > message.encrypted
           
-          
-          sudo docker run -v ${{ github.workspace }}:/data                   \
-                          ghcr.io/${{ github.repository }}/cryptonite:latest \
-                          decrypt --key 17 < /data/message.encrypted > /data/message.decrypted
+          sudo docker run -i ghcr.io/${{ github.repository }}/cryptonite:latest \
+                             decrypt --key 17 < message.encrypted > message.decrypted
           
           if diff -s -q message.txt message.decrypted; then
-            2>& echo 'PASS!'
+            2>&1 echo 'PASS!'
           else
-            2>& echo 'FAIL!'
+            2>&1 echo 'FAIL!'
           fi
