@@ -11,7 +11,7 @@ on:
       - ".github/workflows/007*.yml"
 
 env:
-  HG38_URL: 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz'
+  HG38_URL: 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.masked.gz'
   HG38_MD5_URL: 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/md5sum.txt'
 
 jobs:
@@ -29,12 +29,6 @@ jobs:
       - name: Download hg38 genome assembly
         if: ${{ !steps.cache-hg38.outputs.cache-hit }}
         run: curl -LO "$HG38_URL"
-
-      - name: Checksum hg38 genome assembly
-        if: ${{ !steps.cache-hg38.outputs.cache-hit }}
-        run: |
-          curl -LO "$HG38_MD5_URL"
-          md5sum --check --ignore-missing md5sum.txt
 
       - name: Checksum hg38 genome assembly
         if: ${{ !steps.cache-hg38.outputs.cache-hit }}
