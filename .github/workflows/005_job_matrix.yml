@@ -22,10 +22,10 @@ jobs:
 
     steps:
       - name: Where am I running? (Unix)
-        if: startsWith(matrix.os, 'windows') == 'false'
+        if: ! ${{ startsWith(matrix.os, 'windows') }}
         run: uname
 
       - name: Where am I running? (Win)
-        if: contains(matrix.os, 'windows')
+        if: ${{ startsWith(matrix.os, 'windows') }}
         shell: cmd
         run: ver
