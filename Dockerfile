@@ -2,11 +2,6 @@
 #
 # SPDX-License-Identifier: MIT
 
-##### IMPORTANT #####
-# This Dockerfile requires several build arguments to be defined through --build-arg
-# See utils/devel/build_dockerfile.sh for an example of how to build this Dockerfile
-#####################
-
 FROM curlimages/curl:latest AS downloader
 
 ARG TEST_DATASET_URL='https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.refGene.gtf.gz'
@@ -39,6 +34,7 @@ FROM python:3.10-slim-bullseye AS final
 COPY --from=tester /tmp/pkg/*.whl /tmp/
 
 RUN python3 -m pip install /tmp/*.whl --no-cache-dir
+RUN rm -f /tmp/*.whl
 
 RUN cryptonite --help
 RUN cryptonite --version
