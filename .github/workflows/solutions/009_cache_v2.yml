@@ -45,3 +45,4 @@ jobs:
 
       - name: Peek hg38
         run: head hg38.fa.masked
+        # TODO: update this step to also look at the tail of hg38
