@@ -25,3 +25,15 @@ jobs:
       - name: Where am I running?
         shell: cmd
         run: ver
+
+# Refer to GitHub docs for an up-to-date list of hosted runners:
+# https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+#
+# GitHub recently introduced more powerful (paid) runners. See here:
+# https://docs.github.com/en/actions/using-github-hosted-runners/using-larger-runners
+#
+# The list software installed on each runner can be found here:
+# https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#preinstalled-software
+#
+# Example: list for the ubuntu-22.04 runner
+# https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
