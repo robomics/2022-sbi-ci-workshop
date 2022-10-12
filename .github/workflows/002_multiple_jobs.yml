@@ -38,5 +38,5 @@ jobs:
           printf 'Job #2: time is '
           date
 
-      - name: When did job U+00231 run?
+      - name: When did job N°1 run?
         run: cat message.txt

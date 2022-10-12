@@ -1,0 +1,81 @@
+name: 002 - Intro to GHA Syntax
+
+on:
+  push:
+    branches: [ main, gha-syntax ]
+    paths: [ ".github/workflows/002*.yml" ]
+
+
+jobs:
+  # Define job #1
+  first-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sleep for a while
+        run: sleep 5
+
+      - name: What time is it?
+        run: |
+          # Write current time to file "message.txt"
+          
+          printf 'Job #1: time is ' > message.txt
+          date >> message.txt
+
+      - name: Print message
+        run: cat message.txt
+
+      - name: Save message
+        # Instead of writing this step ourselves, let's use the "upload-artifact" action.
+        # An action is an application that can run on the GitHub Actions platform.
+        #
+        # To use an action we use the following use
+        #    "uses: repo/action-name@action-version"
+        # instead of
+        #    "run: command1 && command2..."
+        #
+        # The with keyword is used to specify parameters to be passed to the action.
+        #
+        # This action will create a .zip file containing file(s) and folder(s) corresponding
+        # to the specified path.
+        # The .zip can then be downloaded through the WebUI or using actions/download-artifact@v3
+        # Docs: https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: message-from-first-job  # Mandatory
+          path: message.txt  # Mandatory
+          if-no-files-found: error
+          retention-days: 7
+
+
+  # Define job #2
+  second-job:
+    runs-on: ubuntu-latest
+    # Make second-job run after first-job completes
+    needs: first-job
+    steps:
+      - name: What time is it?
+        run: |
+          printf 'Job #2: time is '
+          date
+
+      - name: Download message from Job N°1
+        # Download the artifact corresponding to name "message-from-first-job"
+        # actions/download-artifact automatically extracts the .zip file for us.
+        uses: actions/download-artifact@v3
+        with:
+          name: message-from-first-job
+
+      - name: Ensure message.txt exists
+        # This is not really needed in practice, but can be useful for debugging
+        run: |
+          pwd
+          ls -lah .
+          ls -lah message.txt
+
+      - name: Print message from Job N°1
+        run: |
+          # Make sure the message came from Job #1
+          grep --quiet '^Job #1:' message.txt
+          
+          # Print message
+          cat message.txt
