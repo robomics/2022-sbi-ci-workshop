@@ -19,7 +19,7 @@ jobs:
         run: |
           # Write current time to file "message.txt"
 
-          printf 'Job \#1: time is ' > message.txt
+          printf 'Job #1: time is ' > message.txt
           date >> message.txt
 
       - name: Print message
@@ -35,8 +35,8 @@ jobs:
 
       - name: What time is it?
         run: |
-          printf 'Job \#2: time is '
+          printf 'Job #2: time is '
           date
 
-      - name: When did job \#1 run?
+      - name: When did job U+00231 run?
         run: cat message.txt
