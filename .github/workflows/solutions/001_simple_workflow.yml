@@ -1,14 +1,14 @@
 # Name your workflow (mandatory)
-name: 001 - Intro to GHA Syntax
+name: 001 - Simple Workflow
 
 # Define which events should trigger the workflow (mandatory)
 # Refer to GitHub docs for the complete list of supported events:
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
 on:
   # Run workflow when any file matching .github/workflows/001*.yml
-  # is added or modified by a git push to the main or gha-syntax branch
+  # is added or modified by a git push to the main or gha-devel branch
   push:
-    branches: [ main, gha-syntax ]
+    branches: [ main, gha-devel ]
     paths: [ ".github/workflows/001*.yml" ]
 
 # Define the actual workflow job (mandatory)

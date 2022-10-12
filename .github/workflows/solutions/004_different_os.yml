@@ -1,8 +1,8 @@
-name: 004 - Intro to GHA Syntax
+name: 004 - Different runners
 
 on:
   push:
-    branches: [ main, gha-syntax ]
+    branches: [ main, gha-devel ]
     paths: [ ".github/workflows/004*.yml" ]
 
 

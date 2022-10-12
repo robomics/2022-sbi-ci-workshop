@@ -1,8 +1,8 @@
-name: 005 - Intro to GHA Syntax
+name: 005 - Job matrix v1
 
 on:
   push:
-    branches: [ main, gha-syntax ]
+    branches: [ main, gha-devel ]
     paths: [ ".github/workflows/005*.yml" ]
 
 

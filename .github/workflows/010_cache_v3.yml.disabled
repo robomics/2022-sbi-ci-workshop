@@ -1,8 +1,8 @@
-name: 008 - Intro to GHA Syntax
+name: 010 - Caching results v3
 
 on:
   push:
-    branches: [ main, gha-syntax ]
+    branches: [ main, gha-devel ]
     paths: [ ".github/workflows/010*.yml" ]
 
 jobs:

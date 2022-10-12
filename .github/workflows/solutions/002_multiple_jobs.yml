@@ -1,8 +1,8 @@
-name: 002 - Intro to GHA Syntax
+name: 002 - Multiple jobs
 
 on:
   push:
-    branches: [ main, gha-syntax ]
+    branches: [ main, gha-devel ]
     paths: [ ".github/workflows/002*.yml" ]
 
 

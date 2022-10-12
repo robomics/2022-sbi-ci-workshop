@@ -1,8 +1,8 @@
-name: 003 - Intro to GHA Syntax
+name: 003 - Job dependencies
 
 on:
   push:
-    branches: [ main, gha-syntax ]
+    branches: [ main, gha-devel ]
     paths: [ ".github/workflows/003*.yml" ]
 
 
