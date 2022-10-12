@@ -1,0 +1,44 @@
+name: 007 - Intro to GHA Syntax
+
+on:
+  push:
+    branches: [ main, gha-syntax ]
+    paths: [ ".github/workflows/007*.yml" ]
+
+
+jobs:
+  job-matrix-example:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check Python version
+        run: |
+          echo "uname: $(uname)"
+          echo '${{ matrix.os }}'
+          
+          which python3
+          python3 --version
+
+      # This is a GitHub action (without s)
+      # An action is conceptually similar to a function from an external library.
+      # Thousands of actions are available on GitHub's marketplace:
+      # https://github.com/marketplace?type=actions
+      - name: Setup Python
+        # To use an action we write uses: instead of run:
+        uses: actions/setup-python@v4
+        # with: can be used to pass parameters to actions
+        # See https://github.com/actions/setup-python/blob/v4.3.0/action.yml
+        # for the list of parameters supported by the setup-python action
+        with:
+          python-version: '3.10'
+          # TODO: Update the job strategy to setup Python 3.7 and 3.10
+
+      - name: Check Python version one more time
+        run: |
+          which python3
+          python3 --version
+  
