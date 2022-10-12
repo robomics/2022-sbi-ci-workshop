@@ -40,6 +40,7 @@ jobs:
           md5sum --check --ignore-missing md5sum.txt
 
       - name: Extract hg38 genome assembly
+        if: ${{ !steps.cache-hg38.outputs.cache-hit }}
         run: gzip -d hg38.fa.masked.gz
 
       - name: Peek hg38
