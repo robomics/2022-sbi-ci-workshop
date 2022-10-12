@@ -1,0 +1,31 @@
+name: 008 - Intro to GHA Syntax
+
+on:
+  push:
+    branches: [ main, gha-syntax ]
+    paths: [ ".github/workflows/010*.yml" ]
+
+jobs:
+  job-cache:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        build_type: ["debug", "release"]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Cache step
+        id: cache
+        uses: actions/cache@v3
+        with:
+          key: ${{ matrix.os }}-${{ matrix.build_type }}
+          path: "*.txt"
+
+      - name: Write message
+        if: ${{ !steps.cache.outputs.cache-hit }}
+        run: |
+          echo "Cache generated on ${{ matrix.os }}: build_type=${{ matrix.build_type }}" | tee message.txt
+
+      - name: Read message
+        run: cat message.txt

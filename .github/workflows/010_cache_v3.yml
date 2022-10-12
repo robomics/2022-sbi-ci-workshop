@@ -3,20 +3,16 @@ name: 008 - Intro to GHA Syntax
 on:
   push:
     branches: [ main, gha-syntax ]
-    paths:
-      - ".github/workflows/008*.yml"
-
-  pull_request:
-    paths:
-      - ".github/workflows/008*.yml"
+    paths: [ ".github/workflows/010*.yml" ]
 
 jobs:
   job-cache:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
         build_type: ["debug", "release"]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Cache step
