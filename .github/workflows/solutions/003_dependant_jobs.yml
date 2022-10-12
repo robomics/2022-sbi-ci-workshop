@@ -32,8 +32,8 @@ jobs:
   # Define job #3
   third-job:
     runs-on: ubuntu-latest
-    # TODO: make job 3 run after jobs 1 and 2
-    # Hint: look at lines 3-6 for the YAML syntax to declare arrays
+    # Make job #3 depend on jobs #1 and #2
+    needs: [ first-job, second-job ]
     steps:
       - name: What time is it?
         run: |
