@@ -23,10 +23,10 @@ jobs:
   lint-project:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Lint project using black
       - uses: psf/black@stable
         with:
          options: "--check --verbose --diff --color"
-

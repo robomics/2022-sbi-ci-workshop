@@ -29,13 +29,15 @@ jobs:
   build-package:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
+          # Enable caching of pip packages so that they will be downloaded
+          # from PyPI only once
           cache-dependency-path: "pyproject.toml"
           cache: "pip"
 
@@ -49,6 +51,7 @@ jobs:
         run: |
           cp pyproject.toml pkg/
           tar -cJf cryptonite-pkg.tar.xz pkg/
+      # This step is only needed to preserve file and folder permissions
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v3
@@ -59,6 +62,7 @@ jobs:
   unit-test:
     needs: build-package
     strategy:
+      # Test package on Ubuntu and macOS using Python 3.8-10
       matrix:
         os: ["ubuntu-latest", "macos-latest"]
         python-version: ["3.8", "3.9", "3.10"]
@@ -66,7 +70,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Clone repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Download package artifact
@@ -90,9 +94,10 @@ jobs:
         run: python3 -m venv ./venv --upgrade
 
       - name: Install Cryptonite
-        run: |
-          venv/bin/python3 -m pip install pkg/cryptonite*.whl
-          venv/bin/python3 -m pip install '.[test]'
+        run: venv/bin/python3 -m pip install pkg/cryptonite*.whl
+
+      - name: Install test dependencies
+        run: venv/bin/python3 -m pip install '.[test]'
 
       - name: Run unit tests
         run: venv/bin/python3 -m pytest
@@ -130,6 +135,8 @@ jobs:
         id: cache-test-dataset
         uses: actions/cache@v3
         with:
+          # Note that the cache key only depends on the dataset URL.
+          # This means that all jobs in the matrix will use the same cache.
           key: "test-dataset-${{ env.TEST_DATASET_URL }}"
           path: ${{ github.workspace }}/test_dataset.txt
 
@@ -147,14 +154,21 @@ jobs:
         env:
           CRYPTONITE_KEY: 18
         run: |
+          # Encrypt dataset
           venv/bin/cryptonite encrypt --no-validate < test_dataset.txt > test_dataset.encrypted
+          
+          # Decrypt dataset
           venv/bin/cryptonite decrypt --no-validate < test_dataset.encrypted > test_dataset.plain
           
+          # Compare decrypted dataset with the original file
           diff -s -q test_dataset.plain test_dataset.txt
 
   publish-package:
-    needs: [unit-test, integration-test]
     runs-on: ubuntu-latest
+
+    # Only publish Cryptonite on test.pypi if both test jobs pass and if the workflow
+    # was triggered by a release event
+    needs: [unit-test, integration-test]
     if: github.event_name == 'release'
 
     steps:
@@ -173,10 +187,10 @@ jobs:
           cache-dependency-path: "pkg/pyproject.toml"
           cache: "pip"
 
-      - name: Install twine
+      - name: Install twine  # Twine is the package used to upload packages to PyPI
         run: python3 -m pip install 'twine>=4'
 
-      - name: Upload package
+      - name: Upload package to test.pypi
         env:
           TWINE_USERNAME: ${{ secrets.TESTPYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TESTPYPI_PASSWORD }}
@@ -197,7 +211,7 @@ jobs:
       - name: Check Cryptonite version
         run: cryptonite --version
 
-      - name: Test Cryptonite roundtrip
+      - name: Test Cryptonite encryption roundtrip
         env:
           CRYPTONITE_KEY: 10
         run: |

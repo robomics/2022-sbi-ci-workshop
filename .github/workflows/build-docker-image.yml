@@ -28,10 +28,13 @@ jobs:
   build-dockerfile:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
+      # This is conceptually equivalent to running 'git clone myrepo.git',
+      # but it is more efficient and better handles edge cases
 
-      - name: Docker meta
+      - name: Collect project metadata
+        # Use an action to collect metadata for docker build
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -40,10 +43,11 @@ jobs:
           tags: |
             type=semver,priority=1000,pattern={{version}}
             type=sha,priority=900
-            type=raw,value=stable,priority=800,enable=${{ !startsWith(github.ref, 'refs/tags/v') }}
-            type=ref,priority=700,event=branch
-            type=ref,priority=600,event=pr
+            type=ref,priority=800,event=branch
+            type=ref,priority=700,event=pr
 
+      # Login to the container registry on GitHub so that layers of the Docker image
+      # can be uploaded to the registry
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -67,23 +71,30 @@ jobs:
   test-docker-image:
     needs: build-dockerfile
     runs-on: ubuntu-latest
+    env:
+      DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}/cryptonite:latest
+
     steps:
       - name: Pull image
-        run: sudo docker pull ghcr.io/${{ github.repository }}/cryptonite:latest
+        run: sudo docker pull "$DOCKER_IMAGE_NAME"
 
-      - name: Check version
-        run: sudo docker run ghcr.io/${{ github.repository }}/cryptonite:latest --version
+      - name: Check cryptonite version
+        run: sudo docker run "$DOCKER_IMAGE_NAME" --version
 
       - name: Test image
         run: |
+          # Write message to file
           echo "Super-secret message" > message.txt
           
-          sudo docker run -i ghcr.io/${{ github.repository }}/cryptonite:latest \
-                             encrypt --key 17 < message.txt > message.encrypted
+          # Encrypt the message
+          sudo docker run -i "$DOCKER_IMAGE_NAME" \
+                          encrypt --key 17 < message.txt > message.encrypted
           
-          sudo docker run -i ghcr.io/${{ github.repository }}/cryptonite:latest \
-                             decrypt --key 17 < message.encrypted > message.decrypted
+          # Decrypt message
+          sudo docker run -i "$DOCKER_IMAGE_NAME" \
+                          decrypt --key 17 < message.encrypted > message.decrypted
           
+          # Compare original and decrypted message
           if diff -s -q message.txt message.decrypted; then
             2>&1 echo 'PASS!'
           else
