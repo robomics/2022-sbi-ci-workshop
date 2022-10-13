@@ -1,0 +1,91 @@
+# Copyright (C) 2022 Roberto Rossini (roberros@uio.no)
+# SPDX-License-Identifier: MIT
+
+name: Build Docker image
+
+on:
+  push:
+    branches: [ main, cryptonite-ci ]
+    paths:
+      - ".github/workflows/build-docker-image.yml"
+      - "cryptonite/**"
+      - "Dockerfile"
+      - "pyproject.toml"
+      - "setup.py"
+
+    tags:
+      - 'v*.*.*'
+
+  pull_request:
+    paths:
+      - ".github/workflows/build-docker-image.yml"
+      - "cryptonite/**"
+      - "Dockerfile"
+      - "pyproject.toml"
+      - "setup.py"
+
+jobs:
+  build-dockerfile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository }}/cryptonite
+          flavor: latest=true
+          tags: |
+            type=semver,priority=1000,pattern={{version}}
+            type=sha,priority=900
+            type=raw,value=stable,priority=800,enable=${{ !startsWith(github.ref, 'refs/tags/v') }}
+            type=ref,priority=700,event=branch
+            type=ref,priority=600,event=pr
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image and push to registries
+        uses: docker/build-push-action@v3
+        with:
+          push: ${{ github.event_name != 'pull_request' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: BUILDKIT_CONTEXT_KEEP_GIT_DIR=true
+
+  test-docker-image:
+    needs: build-dockerfile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull image
+        run: sudo docker pull ghcr.io/${{ github.repository }}/cryptonite:latest
+
+      - name: Check version
+        run: sudo docker run ghcr.io/${{ github.repository }}/cryptonite:latest --version
+
+      - name: Test image
+        run: |
+          echo "Super-secret message" > message.txt
+          
+          sudo docker run -i ghcr.io/${{ github.repository }}/cryptonite:latest \
+                             encrypt --key 17 < message.txt > message.encrypted
+          
+          sudo docker run -i ghcr.io/${{ github.repository }}/cryptonite:latest \
+                             decrypt --key 17 < message.encrypted > message.decrypted
+          
+          if diff -s -q message.txt message.decrypted; then
+            2>&1 echo 'PASS!'
+          else
+            2>&1 echo 'FAIL!'
+          fi
