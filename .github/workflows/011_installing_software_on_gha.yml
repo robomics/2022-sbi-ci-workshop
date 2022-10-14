@@ -13,15 +13,17 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    #
+    defaults:
+      run:
+        shell: bash -l {0}
+
     steps:
       - name: Install using system package manager (Ubuntu)
         if: ${{ startsWith(matrix.os, 'ubuntu') }}
         run: |
           sudo apt-get update
           sudo apt-get install -y samtools
-          
-          which samtools
-          samtools --version
 
       - name: Install using system package manager (macOS)
         if: ${{ startsWith(matrix.os, 'macos') }}
@@ -31,11 +33,26 @@ jobs:
           which samtools
           samtools --version
 
-      - name: Install using conda
+      - name: Test samtools (system)
         run: |
-          conda create -n env
-          conda activate env
-          conda install -c bioconda samtools
+          which samtools
+          samtools --version
 
+      - name: Setup conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          channels: bioconda, conda-forge, defaults
+          use-only-tar-bz2: true
+          auto-update-conda: true
+          auto-activate-base: true
+
+      - name: Install using conda
+        run: conda create -y --name samtools samtools
+
+      - name: Test samtools (conda)
+        run: |
+          conda activate samtools
+          
           which samtools
           samtools --version
