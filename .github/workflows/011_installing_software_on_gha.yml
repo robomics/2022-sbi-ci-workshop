@@ -1,0 +1,41 @@
+name: 011 - Installing software on GHA
+
+on:
+  push:
+    branches: [ main, gha-devel ]
+    paths: [ ".github/workflows/011*.yml" ]
+
+jobs:
+  installing-sw:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Install using system package manager (Ubuntu)
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y samtools
+          
+          which samtools
+          samtools --version
+
+      - name: Install using system package manager (macOS)
+        if: ${{ startsWith(matrix.os, 'macos') }}
+        run: |
+          brew install samtools
+          
+          which samtools
+          samtools --version
+
+      - name: Install using conda
+        run: |
+          conda create -n env
+          conda activate env
+          conda install -c bioconda samtools
+
+          which samtools
+          samtools --version
