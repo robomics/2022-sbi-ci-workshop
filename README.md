@@ -29,7 +29,7 @@ The exercises do not require a lot of typing, so it is not necessary to clone th
 
 GitHub Actions looks if a folder named `.github/workflows/` exists, and if it contains any `*.yml` file.
 
-When one of the supported event occurs (e.g. one or more commits are pushed, or a pull request is created or update), GitHub Actions will proces the YAML files under
+When one of the supported repository event occurs (e.g. one or more commits are pushed, or a pull request is created or updated), GitHub Actions will proces the YAML files under
 `github/workflows`, and run workflows triggered by the current event.
 
 On the `main` branch, all YAML files under `.github/workflows` are suffixed with `.disabled` and thus
@@ -46,7 +46,7 @@ and push the changes to the `main` branch on you repository.
 #### 2. Rename the file (this will enable syntax highlightning and linting) and/or edit the file
 ![img3.jpg](.readme-assets/img3.jpg)
 
-#### 3. Scroll to the bottom of the page, customize the commit message and description (optional) and commit changes
+#### 3. Scroll to the bottom of the page, customize the commit message and description (optional). Then commit changes
 ![img4.jpg](.readme-assets/img4.jpg)
 
 #### 4. Head over to the Actions tab and monitor workflow progress
