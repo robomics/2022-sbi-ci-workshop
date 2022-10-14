@@ -15,8 +15,7 @@ jobs:
 
   # TODO: Add a job for macOS
   #
-  # Obs 1: If you'd rather not guess the runner name checkout
-  #        the table at the following link:
+  # Obs 1: If you'd rather not guess the runner name, checkout the table at the following link:
   #        https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
   #
   # Obs 2: The uname command works on macOS too.
@@ -26,9 +25,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Where am I running?
+        shell: cmd
         # We are being explicit about the shell required by this step
         # as Windows runners default to use powershell (which does not have the ver command)
         #
         # We could be doing something similar for macOS and Ubuntu (e.g. use zsh instead of bash)
-        shell: cmd
+
         run: ver

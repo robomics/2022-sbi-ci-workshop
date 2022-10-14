@@ -13,32 +13,30 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    #
+    # Workaround for conda activate not working
     defaults:
       run:
         shell: bash -l {0}
 
     steps:
-      - name: Install using system package manager (Ubuntu)
+      - name: Install samtools using apt-get (Ubuntu)
         if: ${{ startsWith(matrix.os, 'ubuntu') }}
         run: |
           sudo apt-get update
           sudo apt-get install -y samtools
 
-      - name: Install using system package manager (macOS)
+      - name: Install samtools using homebrew (macOS)
         if: ${{ startsWith(matrix.os, 'macos') }}
         run: |
           brew install samtools
           
-          which samtools
-          samtools --version
-
       - name: Test samtools (system)
         run: |
           which samtools
           samtools --version
 
       - name: Setup conda
+        # Setup conda using the setup-miniconda action
         uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
@@ -47,7 +45,7 @@ jobs:
           auto-update-conda: true
           auto-activate-base: true
 
-      - name: Install using conda
+      - name: Install samtools using conda
         run: conda create -y --name samtools samtools
 
       - name: Test samtools (conda)

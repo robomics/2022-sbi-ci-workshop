@@ -16,19 +16,15 @@ jobs:
     steps:
       # Use the cache action to avoid needlessly running expensive steps
       - name: Cache hg38
-        # Defining an ID for this step allows us to reference the step later in the workflow
         id: cache-hg38
         uses: actions/cache@v3
         with:
-          key: ${{ env.HG38_URL }}  # key or ID for this entry in the cache database
-          path: hg38.fa.masked  # Path to the file cache
+          key: ${{ env.HG38_URL }}
+          path: hg38.fa.masked
 
       - name: Download hg38 genome assembly
         # Skip step when cached data is available
         if: ${{ !steps.cache-hg38.outputs.cache-hit }}
-        # Notice we are using the cache-hit output attribute of the cache-hg38 step
-        # to determine if hg38 was cached
-
         run: curl -LO "$HG38_URL"
 
       - name: Checksum hg38 genome assembly

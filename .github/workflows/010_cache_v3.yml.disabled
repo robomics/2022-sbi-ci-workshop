@@ -19,6 +19,12 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
+          # By using both matrix variables to generate the cache key, we ensure each
+          # run has its own entry in the cache.
+          # This is very useful when working with compiled languages to keep caches for
+          # different OSes/compilers separated.
+          # Smaller caches also take less to restore. Thus at times it can be advantagious to have
+          # several smaller caches with some redundant data rather than a single, big cache entry.
           key: ${{ matrix.os }}-${{ matrix.build_type }}
           path: "*.txt"
 

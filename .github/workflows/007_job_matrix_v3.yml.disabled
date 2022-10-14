@@ -23,16 +23,9 @@ jobs:
           which python3
           python3 --version
 
-      # This is a GitHub action (without s)
-      # An action is conceptually similar to a function from an external library.
-      # Thousands of actions are available on GitHub's marketplace:
-      # https://github.com/marketplace?type=actions
+      # Install Python using the actions/setup-python action
       - name: Setup Python
-        # To use an action we write uses: instead of run:
         uses: actions/setup-python@v4
-        # with: can be used to pass parameters to actions
-        # See https://github.com/actions/setup-python/blob/v4.3.0/action.yml
-        # for the list of parameters supported by the setup-python action
         with:
           python-version: '3.7'
           # TODO: Update the job strategy to setup Python 3.9 and 3.10 instead of 3.7

@@ -14,9 +14,15 @@ jobs:
         os: [ ubuntu-latest, macos-latest ]
         # matrix variables and values can be arbitrary
         # Tip: I recommend quoting values containing characters other than [a-zA-Z0-9\-_]
-        abc123: [ foo123, "3.141592653589793" ]
+        abc123: [ foo123, "3.141592653589793", "99€" ]
 
-      fail-fast: false
+        # Do not run a job with this specific combination
+        exclude:
+          - { os: macos-latest, abc123: "99€" }
+
+        # Add a job for this specific combination
+        include:
+          - { os: ubuntu, abc123: "ubuntu-only" }
 
     runs-on: ${{ matrix.os }}
 

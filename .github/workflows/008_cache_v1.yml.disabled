@@ -5,7 +5,7 @@ on:
     branches: [ main, gha-devel ]
     paths: [ ".github/workflows/008*.yml" ]
 
-# Define an environment variables
+# Define an environment variable
 # This variable is available to every step of every workflow
 env:
   HG38_URL: 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.masked.gz'

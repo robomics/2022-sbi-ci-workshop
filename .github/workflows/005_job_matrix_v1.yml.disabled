@@ -20,24 +20,14 @@ jobs:
       # matrix:
       #   os: [ ubuntu-latest, macos-latest, windows-latest ]
 
-      fail-fast: false  # Observe the indentation!
-                        # This belongs to the job strategy, not to the matrix.
-
-    runs-on: ${{ matrix.os }}  # <- Variable is expanded to one of the OSes from the job matrix
-    # Expressions like ${{ myvar }} are used as variables in GitHub Actions.
-    # Their behavior is similar to shell variables.
+    runs-on: ${{ matrix.os }}  # Variable is expanded to one of the OSes from the job matrix
 
     steps:
       - name: Where am I running? (Unix)
-        # Run this step on non-windows systems (notice the !)
-        #       ___________________________________________|
-        #       |
-        #       v
         if: ${{ !startsWith(matrix.os, 'windows') }}
         run: uname
 
       - name: Where am I running? (Win)
-        # Run this step only on Windows systems
         if: ${{ startsWith(matrix.os, 'windows') }}
         shell: cmd
         run: ver

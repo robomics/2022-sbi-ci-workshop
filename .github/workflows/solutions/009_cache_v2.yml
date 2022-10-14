@@ -44,5 +44,7 @@ jobs:
         run: gzip -d hg38.fa.masked.gz
 
       - name: Peek hg38
-        run: head hg38.fa.masked
-        # TODO: update this step to also look at the tail of hg38
+        run: |
+          head hg38.fa.masked
+          echo
+          tail hg38.fa.masked
