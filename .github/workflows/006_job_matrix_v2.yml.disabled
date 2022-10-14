@@ -22,7 +22,7 @@ jobs:
 
         # Add a job for this specific combination
         include:
-          - { os: ubuntu, abc123: "ubuntu-only" }
+          - { os: ubuntu-latest, abc123: "ubuntu-only" }
 
     runs-on: ${{ matrix.os }}
 
