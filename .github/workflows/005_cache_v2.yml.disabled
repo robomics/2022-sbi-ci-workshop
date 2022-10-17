@@ -3,7 +3,7 @@ name: 005 - Caching results v2
 on:
   push:
     branches: [ main, gha-devel ]
-    paths: [ ".github/workflows/005*.yml" ]
+    paths: [ ".github/workflows/005*v2.yml" ]
 
 env:
   HG38_URL: 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.masked.gz'
@@ -42,5 +42,5 @@ jobs:
       - name: Peek hg38
         run: |
           head hg38.fa.masked
-          echo
+          printf '%s' '\n\n\n'
           tail hg38.fa.masked

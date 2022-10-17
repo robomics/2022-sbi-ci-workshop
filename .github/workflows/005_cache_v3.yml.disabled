@@ -3,14 +3,14 @@ name: 005 - Caching results v3
 on:
   push:
     branches: [ main, gha-devel ]
-    paths: [ ".github/workflows/005*.yml" ]
+    paths: [ ".github/workflows/005*v3.yml" ]
 
 jobs:
   job-cache:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        build_type: ["debug", "release"]
+        build_type: ["Debug", "Release"]
 
     runs-on: ${{ matrix.os }}
 
@@ -20,6 +20,9 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
+          key: ${{ matrix.os }}-${{ matrix.build_type }}
+          path: "*.txt"
+
           # By using both matrix variables to generate the cache key, we ensure each
           # run has its own entry in the cache.
           # This is very useful when working with compiled languages to keep caches for
@@ -27,8 +30,7 @@ jobs:
           # Smaller caches also take less time to be restored.
           # Thus, at times it can be advantagious to have several smaller caches with
           # some redundant data rather than a single, big cache entry with no redundancy.
-          key: ${{ matrix.os }}-${{ matrix.build_type }}
-          path: "*.txt"
+
 
       - name: Write message
         if: ${{ !steps.cache.outputs.cache-hit }}

@@ -6,17 +6,12 @@ on:
     paths: [ ".github/workflows/006*.yml" ]
 
 jobs:
-  installing-sw:
+  install-samtools-native:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
-
-    # Workaround for conda activate not working
-    defaults:
-      run:
-        shell: bash -l {0}
 
     steps:
       - name: Install samtools using apt-get (Ubuntu)
@@ -25,7 +20,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y samtools
 
-      - name: Install samtools using homebrew (macOS)
+      - name: Install samtools using Homebrew (macOS)
         if: ${{ startsWith(matrix.os, 'macos') }}
         run: |
           brew install samtools
@@ -35,22 +30,35 @@ jobs:
           which samtools
           samtools --version
 
+  install-samtools-conda:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    # Workaround for conda activate not working
+    defaults:
+      run:
+        shell: bash -l {0} # TODO: move this
+
+    steps:
       - name: Setup conda
         # Setup conda using the setup-miniconda action
         uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
           channels: bioconda, conda-forge, defaults
-          use-only-tar-bz2: true
+          use-only-tar-bz2: true  # Enables caching of conda packages
           auto-update-conda: true
           auto-activate-base: true
 
       - name: Install samtools using conda
-        run: conda create -y --name samtools samtools
+        run: conda create -y --name samtools-env samtools
 
       - name: Test samtools (conda)
         run: |
-          conda activate samtools
+          conda activate samtools-env
           
           which samtools
           samtools --version

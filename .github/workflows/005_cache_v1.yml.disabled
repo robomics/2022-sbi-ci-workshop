@@ -3,7 +3,7 @@ name: 005 - Caching results v1
 on:
   push:
     branches: [ main, gha-devel ]
-    paths: [ ".github/workflows/005*.yml" ]
+    paths: [ ".github/workflows/005*v1.yml" ]
 
 # Define an environment variable
 # This variable is available to every step of every workflow
@@ -31,4 +31,7 @@ jobs:
         run: gzip -d hg38.fa.masked.gz
 
       - name: Peek hg38
-        run: head hg38.fa.masked
+        run: |
+          head hg38.fa.masked
+          printf '%s' '\n\n\n'
+          tail hg38.fa.masked

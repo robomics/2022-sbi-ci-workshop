@@ -21,3 +21,21 @@ jobs:
     steps:
       - name: Print distro information
         run: cat /etc/*-release
+
+      - name: Install GCC and git (pacman)
+        run: pacman -Sy --noconfirm gcc git
+
+      - name: Install GCC and git (yum)
+        run: yum install -y gcc-c++ git
+
+      - name: Check GCC version
+        run: gcc --version
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Compile test program
+        run: g++ -O3 -std=c++20 scripts/test_cpp20.cpp -o test
+
+      - name: Run test program
+        run: ./test if you can run this then you are using a modern compiler!
