@@ -1,9 +1,9 @@
-name: 008 - Caching results v1
+name: 005 - Caching results v1
 
 on:
   push:
     branches: [ main, gha-devel ]
-    paths: [ ".github/workflows/008*.yml" ]
+    paths: [ ".github/workflows/005*.yml" ]
 
 # Define an environment variable
 # This variable is available to every step of every workflow

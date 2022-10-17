@@ -1,9 +1,9 @@
-name: 011 - Installing software on GHA
+name: 006 - Installing software on GHA
 
 on:
   push:
     branches: [ main, gha-devel ]
-    paths: [ ".github/workflows/011*.yml" ]
+    paths: [ ".github/workflows/006*.yml" ]
 
 jobs:
   installing-sw:

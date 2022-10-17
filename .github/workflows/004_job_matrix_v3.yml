@@ -11,7 +11,10 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-20.04, macos-12, windows-latest ]
-        python-version: ['3.9', '3.10']
+        # TODO: Update the job matrix such that the Setup Python step
+        #       sets up Python 3.9 and 3.10 instead of 3.7
+        #
+        # Obs:  Matrix variables can have arbitrary names and values.
 
       fail-fast: false  # Do not cancel jobs as soon as a job fails
 
@@ -33,7 +36,8 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          # TODO replace version 3.7 with the version defined in the job matrix
+          python-version: '3.7'
 
       - name: Check Python version one more time
         run: |

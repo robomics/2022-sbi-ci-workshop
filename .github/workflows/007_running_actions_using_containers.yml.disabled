@@ -1,9 +1,9 @@
-name: 012 - Running Actions using containers
+name: 007 - Running Actions using containers
 
 on:
   push:
     branches: [ main, gha-devel ]
-    paths: [ ".github/workflows/012*.yml" ]
+    paths: [ ".github/workflows/007*.yml" ]
 
 jobs:
   container-example:
