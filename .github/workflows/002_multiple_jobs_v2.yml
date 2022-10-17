@@ -1,0 +1,51 @@
+name: 002 - Multiple jobs v2
+
+on:
+  push:
+    branches: [ main, gha-devel ]
+    paths: [ ".github/workflows/002*v2.yml" ]
+
+
+jobs:
+  # Define job #1
+  first-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Sleep for a while
+        run: sleep 5
+
+      - name: What time is it?
+        run: |
+          # Write current time to file "message.txt"
+
+          printf 'Job #1: time is ' > message.txt
+          date >> message.txt
+
+      - name: Print message
+        run: cat message.txt
+
+  # Define job #2
+  second-job:
+    runs-on: ubuntu-latest
+    # Make second-job run after first-job completes
+    needs: first-job
+
+    steps:
+      - name: Sleep for a while
+        run: sleep 5
+
+      - name: What time is it?
+        run: |
+          printf 'Job #2: time is '
+          date
+
+      - name: Ensure message.txt exists
+        # Useful for debugging
+        run: |
+          pwd
+          ls -lah .
+          ls -lah message.txt
+
+      - name: When did job N°1 run?
+        run: cat message.txt

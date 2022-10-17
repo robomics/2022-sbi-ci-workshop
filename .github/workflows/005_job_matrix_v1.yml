@@ -3,7 +3,7 @@ name: 005 - Job matrix v1
 on:
   push:
     branches: [ main, gha-devel ]
-    paths: [ ".github/workflows/005*.yml" ]
+    paths: [ ".github/workflows/005*v1.yml" ]
 
 
 jobs:
