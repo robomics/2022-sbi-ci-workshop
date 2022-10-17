@@ -1,6 +1,6 @@
 # Introduction to CI/CD with GitHub Actions - SBI workshop \[2022/10/18\]
 
-This repository hosts the code used during the workshop held on 2022/10/18 at the Bioinformatic Center at UiO.
+This repository hosts the code used during the workshop held on 2022/10/18 at the Bioinformatics Center at UiO.
 
 The workshop is organized in two parts:
 1. In the first part we will get familiar with the syntax and features of GitHub actions.
