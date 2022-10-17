@@ -11,12 +11,16 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-20.04, macos-12, windows-latest ]
+        python-version: ['3.9', '3.10']
 
       fail-fast: false  # Do not cancel jobs as soon as a job fails
 
     runs-on: ${{ matrix.os }}  # Variable is expanded to one of the OSes from the job matrix
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
       - name: Check Python version
         run: |
           echo "uname: $(uname)"
@@ -29,7 +33,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: ['3.9', '3.10']
+          python-version: ${{ matrix.python-version }}
 
       - name: Check Python version one more time
         run: |
