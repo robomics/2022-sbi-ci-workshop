@@ -21,11 +21,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Look around
+      - name: Look around (Unix)
+        if: ${{ !startsWith(matrix.os, 'windows') }}
         run: |
             ls -lah .
             ls -lah .github/workflows
             ls -lah scripts/
+
+      - name: Look around (Win)
+        if: ${{ startsWith(matrix.os, 'windows') }}
+        run: |
+          dir
+          dir .github\workflows
+          dir scripts
 
       - name: Check Python version
         run: |
