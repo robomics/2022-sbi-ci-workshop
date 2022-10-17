@@ -37,11 +37,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    # Workaround for conda activate not working
-    defaults:
-      run:
-        shell: bash -l {0} # TODO: move this
-
     steps:
       - name: Setup conda
         # Setup conda using the setup-miniconda action
@@ -57,6 +52,7 @@ jobs:
         run: conda create -y --name samtools-env samtools
 
       - name: Test samtools (conda)
+        shell: bash -l {0}  # Workaround for conda activate not working
         run: |
           conda activate samtools-env
           
