@@ -1,0 +1,46 @@
+name: 004 - Job matrix v3
+
+on:
+  push:
+    branches: [ main, gha-devel ]
+    paths: [ ".github/workflows/004*v3.yml" ]
+
+
+jobs:
+  job-matrix-example:
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04, macos-12, windows-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check Python version
+        run: |
+          echo "uname: $(uname)"
+          echo '${{ matrix.os }}'
+          
+          which python3
+          python3 --version
+
+      # Install Python using the actions/setup-python action
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ['3.9', '3.10']
+
+      - name: Check Python version one more time
+        run: |
+          which python3
+          python3 --version
+
+      - name: Echo Python script? (Unix)
+        if: ${{ !startsWith(matrix.os, 'windows') }}
+        run: cat scripts/test_dictionary_union.py
+
+      - name: Where am I running? (Win)
+        if: ${{ startsWith(matrix.os, 'windows') }}
+        run: type scripts\test_dictionary_union.py
+
+      - name: Run Python script
+        run: python3 scripts/test_dictionary_union.py

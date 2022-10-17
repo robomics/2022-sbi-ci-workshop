@@ -1,9 +1,9 @@
-name: 004 - Different runners
+name: 003 - Different runners
 
 on:
   push:
     branches: [ main, gha-devel ]
-    paths: [ ".github/workflows/004*.yml" ]
+    paths: [ ".github/workflows/003*.yml" ]
 
 
 jobs:
