@@ -23,9 +23,11 @@ jobs:
         run: cat /etc/*-release
 
       - name: Install GCC and git (pacman)
+        if: ${{ startsWith(matrix.image, 'archlinux') }}
         run: pacman -Sy --noconfirm gcc git
 
       - name: Install GCC and git (yum)
+        if: ${{ !startsWith(matrix.image, 'archlinux') }}
         run: yum install -y gcc-c++ git
 
       - name: Check GCC version
