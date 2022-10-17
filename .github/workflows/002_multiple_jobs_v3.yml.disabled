@@ -31,7 +31,7 @@ jobs:
         # Specify parameters for the action
         # Documentation: https://github.com/actions/upload-artifact/blob/main/action.yml
         with:
-          name:  first-job-message  # Mandatory option
+          name:  # TODO: give a name to this artifact (mandatory option)
           path: message.txt  # Mandatory option
           if-no-files-found: error
           retention-days: 7
@@ -39,7 +39,7 @@ jobs:
   # Define job #2
   second-job:
     runs-on: ubuntu-latest
-    needs:  first-job  # Make second-job run after first-job
+    needs:  # TODO: make second-job run after first-job
 
     steps:
       - name: Sleep for a while
@@ -51,9 +51,10 @@ jobs:
           date
 
       - name: Download message from Job N°1
-        uses:  actions/download-artifact@v3
+        # TODO: use the actions/download-artifact@v3 action to restore the artifact in second-job
+        #       docs: https://github.com/actions/download-artifact#usage
         with:
-          name: first-job-message
+          # TODO: specify the name of the artifact to be restored
 
       - name: Ensure message.txt exists
         # Useful for debugging
