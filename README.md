@@ -2,10 +2,14 @@
 
 This repository hosts the code used during the workshop held on 2022/10/18 at the Bioinformatic Center at UiO.
 
+The workshop is organized in two parts:
+1. In the first part we will get familiar with the syntax and features of GitHub actions.
+2. In the second part we will see how concepts from 1. can be applied to build, test and publish a Python application on PyPI.
+
 ## Repository layout
 Code in this repository is organized in 3 branches:
-- The `main` branch hosts code for the interactive part of the workshop, with examples and exercises introducing GHA syntax and core concepts.
-- The `cryptonite` hosts the code for cryptonite, a simple package developed for demo purposes (note: code in this branch is not related in any way to the cryptonite blockchain). 
+- The `main` branch hosts code for the interactive part of the workshop, with examples and exercises introducing GHA syntax and core concepts. Code in this branch will be used in the first part of the workshop.
+- The `cryptonite` branch hosts the code for cryptonite, a simple Python package developed for demo purposes (note: code in this branch is not related in any way to the cryptonite blockchain). 
   Cryptonite is a small library and CLI application for encrypting/decrypting ASCII text using [Caesar cipher](https://en.wikipedia.org/wiki/Caesar_cipher).
   The CLI interface consists of two subcommands:
   - `cryptonite encrypt` reads plain text from stdin and writes the encrypted text to stdout. 
@@ -14,6 +18,7 @@ Code in this repository is organized in 3 branches:
      CLI options are identical to those for `cryptonite encrypt`.
 - The `cryptonite-ci` branch hosts the same code found in the `cryptonite` branch, as well as 3 GHA workflows.
   These workflows show how concepts explored through exercises in the `main` branch can be used to automate building, testing and delivering a Python application.
+  Code in this branch will be used in the second part of the workshop.
 
 ## Exercise guidelines
 To do the exercises you will need a GitHub account.
@@ -29,8 +34,8 @@ The exercises do not require a lot of typing, so it is not necessary to clone th
 
 GitHub Actions looks if a folder named `.github/workflows/` exists, and if it contains any `*.yml` file.
 
-When one of the supported repository event occurs (e.g. one or more commits are pushed, or a pull request is created or updated), GitHub Actions will proces the YAML files under
-`github/workflows`, and run workflows triggered by the current event.
+When one of the supported repository event occurs (e.g. one or more commits are pushed, or a pull request is created or updated), GitHub Actions will look for YAML files under
+folder `.github/workflows`, and run workflow(s) defined in the YAML file(s) when appropriate.
 
 On the `main` branch, all YAML files under `.github/workflows` are suffixed with `.disabled` and thus
 won't be processed by GitHub Actions.
