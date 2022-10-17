@@ -12,7 +12,9 @@ jobs:
       matrix:
         os: [ ubuntu-20.04, macos-12, windows-latest ]
 
-    runs-on: ${{ matrix.os }}
+      fail-fast: false  # Do not cancel jobs as soon as a job fails
+
+    runs-on: ${{ matrix.os }}  # Variable is expanded to one of the OSes from the job matrix
 
     steps:
       - name: Check Python version
