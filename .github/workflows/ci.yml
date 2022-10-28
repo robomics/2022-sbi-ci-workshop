@@ -36,7 +36,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
           # Enable caching of pip packages so that they will be downloaded
           # from PyPI only once
           cache-dependency-path: "pyproject.toml"
@@ -69,7 +69,7 @@ jobs:
       # Test package on Ubuntu and macOS using Python 3.8-10
       matrix:
         os: ["ubuntu-latest", "macos-latest"]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -97,7 +97,7 @@ jobs:
         run: python3 -m venv ./venv --upgrade
 
       - name: Install Cryptonite
-        run: venv/bin/python3 -m pip install pkg/cryptonite*.whl
+        run: venv/bin/python3 -m pip install pkg/*cryptonite*.whl
 
       - name: Install test dependencies
         run: venv/bin/python3 -m pip install '.[test]'
@@ -111,7 +111,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest", "macos-latest"]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -151,7 +151,7 @@ jobs:
         run: python3 -m venv ./venv --upgrade
 
       - name: Install Cryptonite
-        run: venv/bin/python3 -m pip install pkg/cryptonite*.whl
+        run: venv/bin/python3 -m pip install pkg/*cryptonite*.whl
 
       - name: Run integration test
         env:
