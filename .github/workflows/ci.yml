@@ -213,9 +213,11 @@ jobs:
     if: github.event_name == 'release'
 
     steps:
-      - name: Get current Cryptonite tag
+      - name: Get release tag
         id: get-tag
-        run: echo "tag=${GITHUB_REF#refs/*/v}" >> "$GITHUB_OUTPUTS"
+        run: |
+          tag="${{ github.event.release.tag_name }}"
+          echo "tag=${tag#v}" >> "$GITHUB_OUTPUTS"
 
       - name: Download Cryptonite from PyPI
         run: |
