@@ -2,39 +2,21 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM curlimages/curl:latest AS downloader
-
-ARG TEST_DATASET_URL='https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.refGene.gtf.gz'
-
-RUN curl -L "$TEST_DATASET_URL" | gzip -dc > /tmp/test_dataset.txt
-
-
 FROM python:3.10-bullseye AS builder
 
 ARG src_dir='/tmp/cryptonite'
+ARG PIP_NO_CACHE_DIR=0
 
-RUN mkdir -p "$src_dir"
 COPY . "$src_dir"
 
-RUN python3 -m pip install --upgrade pip build   \
-&& python3 -m build "$src_dir" --outdir /tmp/pkg
-
-FROM python:3.10-slim-bullseye AS tester
-
-COPY --from=downloader /tmp/test_dataset.txt /tmp/
-COPY --from=builder /tmp/pkg /tmp/pkg
-
-RUN python3 -m pip install /tmp/pkg/*.whl
-
-RUN python3 -m cryptonite encrypt -k 5 --no-validate < /tmp/test_dataset.txt | \
-    python3 -m cryptonite decrypt -k 5 --no-validate | \
-    diff -s -q - /tmp/test_dataset.txt
+RUN python3 -m venv /opt/pyenv --upgrade
+RUN /opt/pyenv/bin/pip3 install "$src_dir"
 
 FROM python:3.10-slim-bullseye AS final
-COPY --from=tester /tmp/pkg/*.whl /tmp/
+COPY --from=builder /opt/pyenv /opt/pyenv
 
-RUN python3 -m pip install /tmp/*.whl --no-cache-dir
-RUN rm -f /tmp/*.whl
+ENV VIRTUAL_ENV=/opt/pyenv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN cryptonite --help
 RUN cryptonite --version

@@ -30,8 +30,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      # This is conceptually equivalent to running 'git clone myrepo.git',
-      # but it is more efficient and better handles edge cases
 
       - name: Collect project metadata
         # Use an action to collect metadata for docker build
@@ -46,8 +44,8 @@ jobs:
             type=ref,priority=800,event=branch
             type=ref,priority=700,event=pr
 
-      # Login to the container registry on GitHub so that layers of the Docker image
-      # can be uploaded to the registry
+      # Login to the container registry on GitHub so that final Docker image
+      # (as well as intermediate layers) can be uploaded to the registry
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -71,32 +69,27 @@ jobs:
   test-docker-image:
     needs: build-dockerfile
     runs-on: ubuntu-latest
-    env:
-      DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}/cryptonite:latest
+
+    container:
+      image: ghcr.io/${{ github.repository }}/cryptonite:latest
+      options: '--entrypoint /bin/bash'
 
     steps:
-      - name: Pull image
-        run: sudo docker pull "$DOCKER_IMAGE_NAME"
-
-      - name: Check cryptonite version
-        run: sudo docker run "$DOCKER_IMAGE_NAME" --version
-
       - name: Test image
         run: |
           # Write message to file
           echo "Super-secret message" > message.txt
           
           # Encrypt the message
-          sudo docker run -i "$DOCKER_IMAGE_NAME" \
-                          encrypt --key 17 < message.txt > message.encrypted
+          cryptonite encrypt --key 17 < message.txt > message.encrypted
           
           # Decrypt message
-          sudo docker run -i "$DOCKER_IMAGE_NAME" \
-                          decrypt --key 17 < message.encrypted > message.decrypted
+          cryptonite decrypt --key 17 < message.encrypted > message.decrypted
           
           # Compare original and decrypted message
           if diff -s -q message.txt message.decrypted; then
-            2>&1 echo 'PASS!'
+            2>&1 echo '### PASS! ###'
           else
-            2>&1 echo 'FAIL!'
+            2>&1 echo '### FAIL! ###'
+            exit 1
           fi
