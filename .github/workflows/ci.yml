@@ -201,7 +201,7 @@ jobs:
           cache: "pip"
 
       - name: Install twine
-        run: python3 -m pip install -r requiements.txt
+        run: python3 -m pip install -r requirements.txt
 
       - name: Upload package to test.pypi
         env:
