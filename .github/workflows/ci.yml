@@ -215,7 +215,7 @@ jobs:
     steps:
       - name: Get current Cryptonite tag
         id: get-tag
-        run: echo "tag=${GITHUB_REF#refs/*/}" >>  "$GITHUB_OUTPUTS"
+        run: echo "tag=${GITHUB_REF#refs/*/v}" >> "$GITHUB_OUTPUTS"
 
       - name: Download Cryptonite from PyPI
         run: |

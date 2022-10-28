@@ -39,7 +39,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}/cryptonite
           flavor: latest=true
           tags: |
-            type=semver,priority=1000,pattern={{version}}
+            type=pep440,priority=1000,pattern={{version}}
             type=sha,priority=900
             type=ref,priority=800,event=branch
             type=ref,priority=700,event=pr
