@@ -27,6 +27,7 @@ on:
 
 jobs:
   build-package:
+    name: Build Cryptonite
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -58,26 +59,28 @@ jobs:
         with:
           name: cryptonite-pkg
           path: cryptonite-pkg.tar.xz
+          if-no-files-found: error
+          retention-days: 3
 
   unit-test:
+    name: Run unit tests
     needs: build-package
     strategy:
       # Test package on Ubuntu and macOS using Python 3.8-10
       matrix:
         os: ["ubuntu-latest", "macos-latest"]
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Download package artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: build-package.yml
           name: cryptonite-pkg
 
       - name: Extract Package
@@ -103,22 +106,22 @@ jobs:
         run: venv/bin/python3 -m pytest
 
   integration-test:
+    name: Run integration tests
     needs: build-package
     strategy:
       matrix:
         os: ["ubuntu-latest", "macos-latest"]
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
     env:
       TEST_DATASET_URL: 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.refGene.gtf.gz'
+
     steps:
       - name: Download package artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: build-package.yml
           name: cryptonite-pkg
 
       - name: Extract Package
@@ -161,9 +164,15 @@ jobs:
           venv/bin/cryptonite decrypt --no-validate < test_dataset.encrypted > test_dataset.plain
           
           # Compare decrypted dataset with the original file
-          diff -s -q test_dataset.plain test_dataset.txt
+          if diff -s -q test_dataset.plain test_dataset.txt; then
+            2>&1 echo '### PASS! ###'
+          else
+            2>&1 echo '### FAIL! ###'
+            exit 1
+          fi
 
   publish-package:
+    name: Publish Cryptonite on test.pypi
     runs-on: ubuntu-latest
 
     # Only publish Cryptonite on test.pypi if both test jobs pass and if the workflow
@@ -187,7 +196,8 @@ jobs:
           cache-dependency-path: "pkg/pyproject.toml"
           cache: "pip"
 
-      - name: Install twine  # Twine is the package used to upload packages to PyPI
+      - name: Install twine
+        # Twine is one of the packages that can be used to upload packages to PyPI
         run: python3 -m pip install 'twine>=4'
 
       - name: Upload package to test.pypi
@@ -197,6 +207,7 @@ jobs:
         run: python3 -m twine upload --repository testpypi pkg/*.{whl,tar.gz}
 
   download-package:
+    name: Download Cryptonite from test.pypi
     needs: publish-package
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
@@ -222,9 +233,9 @@ jobs:
             cryptonite decrypt > msg.txt
           
           if grep -q "$msg" msg.txt; then
-            2>&1 echo 'PASS!'
+            2>&1 echo '### PASS! ###'
             exit 0
           else
-            2>&1 echo 'FAIL!'
+            2>&1 echo '### FAIL! ###'
             exit 1
           fi
