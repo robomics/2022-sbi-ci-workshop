@@ -7,14 +7,14 @@ on:
   push:
     branches: [ main, cryptonite-ci ]
     paths:
-      - ".github/workflows/*.yml"
+      - ".github/workflows/lint.yml"
       - "cryptonite/**"
       - "pyproject.toml"
       - "setup.py"
 
   pull_request:
     paths:
-      - ".github/workflows/*.yml"
+      - ".github/workflows/lint.yml"
       - "cryptonite/**"
       - "pyproject.toml"
       - "setup.py"
@@ -22,6 +22,7 @@ on:
 jobs:
   lint-project:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
