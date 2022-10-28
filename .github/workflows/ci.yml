@@ -190,6 +190,7 @@ jobs:
         run: tar -xf cryptonite-pkg.tar.xz
 
       - name: Generate requirements.txt
+        # Twine is one of the packages that can be used to upload packages to PyPI
         run: echo 'twine>=4' > requirements.txt
 
       - name: Setup Python
@@ -200,8 +201,7 @@ jobs:
           cache: "pip"
 
       - name: Install twine
-        # Twine is one of the packages that can be used to upload packages to PyPI
-        run: python3 -m pip install 'twine>=4'
+        run: python3 -m pip install -r requiements.txt
 
       - name: Upload package to test.pypi
         env:
@@ -220,7 +220,7 @@ jobs:
         id: get-tag
         run: |
           tag="${{ github.event.release.tag_name }}"
-          echo "tag=${tag#v}" >> "$GITHUB_OUTPUTS"
+          echo "tag=${tag#v}" >> $GITHUB_OUTPUT
 
       - name: Download Cryptonite from PyPI
         run: |
