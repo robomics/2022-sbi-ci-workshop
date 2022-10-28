@@ -213,11 +213,15 @@ jobs:
     if: github.event_name == 'release'
 
     steps:
+      - name: Get current Cryptonite tag
+        id: get-tag
+        run: echo "tag=${GITHUB_REF#refs/*/}" >>  "$GITHUB_OUTPUTS"
+
       - name: Download Cryptonite from PyPI
         run: |
           python3 -m pip install \
             --extra-index-url https://test.pypi.org/simple/ \
-            2022-sbi-ci-workflow-cryptonite
+            "2022-sbi-ci-workflow-cryptonite==${{ steps.get-tag.outputs.tag }}"
 
       - name: Check Cryptonite version
         run: cryptonite --version
