@@ -1,10 +1,14 @@
-# Introduction to CI/CD with GitHub Actions - SBI workshop \[2022/10/18\]
+# Introduction to CI/CD with GitHub Actions (part I) - SBI workshop \[2022/10/18\]
+
+__IMPORTANT__: Click [here](https://github.com/robomics/2022-sbi-ci-workshop-pt2) to head over the repository for part II of the workshop.
 
 This repository hosts the code used during the workshop held on 2022/10/18 at the Bioinformatics Center at UiO.
 
 The workshop is organized in two parts:
 1. In the first part we will get familiar with the syntax and features of GitHub actions.
-2. In the second part we will see how concepts from 1. can be applied to build, test, and publish a Python application on PyPI.
+2. In the second part we will see how concepts from 1. can be applied to write a CI/CD pipeline for a Python application.
+
+See [robomics/2022-sbi-ci-workshop-pt2](https://github.com/robomics/2022-sbi-ci-workshop-pt2) for part II.
 
 ## Repository layout
 This repository is organized in 3 branches:
